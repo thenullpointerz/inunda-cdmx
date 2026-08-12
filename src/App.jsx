@@ -1,39 +1,77 @@
-import { useMemo, useState } from "react";
-import { Droplet, Bell, CloudRain, MapPinPlus, ChevronDown } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Droplet, Bell, CloudRain, MapPinPlus, ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
 import FloodMap from "./components/FloodMap";
 import { useRainGrid } from "./hooks/useRainGrid";
 import { useReports } from "./hooks/useReports";
 import { RAIN_LEVELS, rainLevelFor } from "./lib/rainScale";
 import "./App.css";
 
-const TABS = [
+const LAYERS = [
   { id: "rain", label: "Lluvia en vivo" },
   { id: "risk", label: "Riesgo historico" },
   { id: "reports", label: "Reportes" },
 ];
 
-function nearestStation(stations, center) {
-  if (stations.length === 0) return null;
-  return stations.reduce((closest, s) => {
-    const d = (s.lat - center.lat) ** 2 + (s.lon - center.lng) ** 2;
-    const dClosest = (closest.lat - center.lat) ** 2 + (closest.lon - center.lng) ** 2;
-    return d < dClosest ? s : closest;
+function sortedByDistance(stations, point) {
+  return [...stations].sort((a, b) => {
+    const da = (a.lat - point.lat) ** 2 + (a.lon - point.lng) ** 2;
+    const db = (b.lat - point.lat) ** 2 + (b.lon - point.lng) ** 2;
+    return da - db;
   });
 }
 
 function App() {
-  const [activeTab, setActiveTab] = useState("rain");
+  const [activeLayers, setActiveLayers] = useState({ rain: true, risk: false, reports: true });
   const [reportMode, setReportMode] = useState(false);
+  const [nearbyOpen, setNearbyOpen] = useState(false);
   const [center, setCenter] = useState({ lat: 19.4326, lng: -99.1332 });
+  const [userLocation, setUserLocation] = useState(null);
+  const [focusTarget, setFocusTarget] = useState(null);
   const rainPoints = useRainGrid();
-  const { reports, addReport } = useReports();
+  const { reports, allReports, addReport } = useReports();
 
-  const closest = useMemo(() => nearestStation(rainPoints, center), [rainPoints, center]);
+  function locateMe() {
+    if (!navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const loc = { lat: position.coords.latitude, lng: position.coords.longitude };
+        setUserLocation(loc);
+        setCenter(loc);
+      },
+      () => {},
+      { timeout: 8000 },
+    );
+  }
+
+  useEffect(() => {
+    locateMe();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function focusStation(station) {
+    setFocusTarget({ lat: station.lat, lng: station.lon });
+    setNearbyOpen(false);
+  }
+
+  const nearby = useMemo(() => sortedByDistance(rainPoints, center), [rainPoints, center]);
+  const closest = nearby[0] ?? null;
   const wetCount = useMemo(() => rainPoints.filter((s) => s.mm > 0).length, [rainPoints]);
 
   function handleMapClick(lat, lng) {
     addReport(lat, lng);
     setReportMode(false);
+  }
+
+  function toggleLayer(id) {
+    setActiveLayers((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
+
+  function toggleReportMode() {
+    setReportMode((v) => {
+      const next = !v;
+      if (next) setActiveLayers((prev) => ({ ...prev, reports: true }));
+      return next;
+    });
   }
 
   return (
@@ -47,26 +85,29 @@ function App() {
       </header>
 
       <nav className="tabs">
-        {TABS.map((tab) => (
+        {LAYERS.map((layer) => (
           <button
-            key={tab.id}
-            className={`tab ${activeTab === tab.id ? "tab-active" : ""}`}
-            onClick={() => setActiveTab(tab.id)}
+            key={layer.id}
+            className={`tab ${activeLayers[layer.id] ? "tab-active" : ""}`}
+            onClick={() => toggleLayer(layer.id)}
             type="button"
           >
-            {tab.label}
+            {layer.label}
           </button>
         ))}
       </nav>
 
       <div className="map-wrap">
         <FloodMap
-          showRisk={activeTab === "risk"}
-          showReports={activeTab === "reports"}
-          showRain={activeTab === "rain"}
+          showRisk={activeLayers.risk}
+          showReports={activeLayers.reports}
+          showRain={activeLayers.rain}
           rainPoints={rainPoints}
           reports={reports}
+          historicalReports={allReports}
           reportMode={reportMode}
+          userLocation={userLocation}
+          focusTarget={focusTarget}
           onMapClick={handleMapClick}
           onCenterChange={(lat, lng) => setCenter({ lat, lng })}
         />
@@ -74,13 +115,23 @@ function App() {
           <div className="report-hint">Toca el mapa para marcar la inundacion</div>
         )}
 
+        <button
+          type="button"
+          className="locate-btn"
+          onClick={locateMe}
+          aria-label="Ir a mi ubicacion"
+        >
+          <LocateFixed size={18} aria-hidden="true" />
+        </button>
+
         <div className="overlay-bottom">
-          {activeTab === "risk" && (
+          {activeLayers.risk && (
             <div className="legend">
-              <span><i className="dot dot-red" /> Zona con historial de encharcamiento</span>
+              <span><i className="dot dot-red" /> Zona con historial de encharcamiento (IPDP)</span>
+              <span><i className="dot" style={{ background: "#d4537e" }} /> Reportado por usuarios</span>
             </div>
           )}
-          {activeTab === "rain" && (
+          {activeLayers.rain && (
             <div className="legend">
               <span className="legend-count">
                 {wetCount} de {rainPoints.length} estaciones con lluvia
@@ -95,24 +146,50 @@ function App() {
 
           <div className="overlay-row">
             <div className="rain-card">
-              <div className="rain-card-left">
-                <CloudRain size={18} className="brand-icon" aria-hidden="true" />
-                <div>
-                  <p className="rain-title">Lluvia en tu zona</p>
-                  <p className="rain-subtitle">
-                    {!closest && "Consultando..."}
-                    {closest &&
-                      `${closest.name}: ${rainLevelFor(closest.mm).label}, ${closest.mm} mm`}
-                  </p>
+              <button
+                type="button"
+                className="rain-card-header"
+                onClick={() => setNearbyOpen((v) => !v)}
+                disabled={nearby.length === 0}
+              >
+                <div className="rain-card-left">
+                  <CloudRain size={18} className="brand-icon" aria-hidden="true" />
+                  <div>
+                    <p className="rain-title">Lluvia en tu zona</p>
+                    <p className="rain-subtitle">
+                      {!closest && "Consultando..."}
+                      {closest &&
+                        `${closest.name}: ${rainLevelFor(closest.mm).label}, ${closest.mm} mm`}
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <ChevronDown size={16} className="muted-icon" aria-hidden="true" />
+                {nearbyOpen ? (
+                  <ChevronUp size={16} className="muted-icon" aria-hidden="true" />
+                ) : (
+                  <ChevronDown size={16} className="muted-icon" aria-hidden="true" />
+                )}
+              </button>
+
+              {nearbyOpen && (
+                <ul className="nearby-list">
+                  {nearby.slice(0, 5).map((s) => (
+                    <li key={s.id}>
+                      <button type="button" className="nearby-item" onClick={() => focusStation(s)}>
+                        <span>{s.name}</span>
+                        <span className={s.mm > 0 ? "nearby-wet" : "nearby-dry"}>
+                          {s.mm > 0 ? `${rainLevelFor(s.mm).label} (${s.mm} mm)` : "Sin lluvia"}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
 
             <button
               type="button"
               className={`report-btn ${reportMode ? "report-btn-active" : ""}`}
-              onClick={() => setReportMode((v) => !v)}
+              onClick={toggleReportMode}
             >
               <MapPinPlus size={16} aria-hidden="true" />
               {reportMode ? "Cancelar" : "Reportar inundacion"}

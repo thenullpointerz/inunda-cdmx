@@ -6,6 +6,7 @@ import {
   Marker,
   CircleMarker,
   Tooltip,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -37,6 +38,22 @@ function reportAge(createdAt) {
   return `${ago} · se borra en ${hoursLeft.toFixed(1)} h`;
 }
 
+function clusterReports(historicalReports, precision = 0.003) {
+  const buckets = new Map();
+  for (const r of historicalReports) {
+    const key = `${Math.round(r.lat / precision)}:${Math.round(r.lng / precision)}`;
+    const bucket = buckets.get(key);
+    if (bucket) {
+      bucket.count += 1;
+      bucket.lat = (bucket.lat * (bucket.count - 1) + r.lat) / bucket.count;
+      bucket.lng = (bucket.lng * (bucket.count - 1) + r.lng) / bucket.count;
+    } else {
+      buckets.set(key, { lat: r.lat, lng: r.lng, count: 1 });
+    }
+  }
+  return Array.from(buckets.values());
+}
+
 function reportIcon() {
   return L.divIcon({
     className: "report-pin",
@@ -44,6 +61,16 @@ function reportIcon() {
     iconSize: [16, 16],
     iconAnchor: [8, 8],
   });
+}
+
+function FlyTo({ target, zoom = 15 }) {
+  const map = useMap();
+
+  useEffect(() => {
+    if (target) map.flyTo([target.lat, target.lng], zoom);
+  }, [target, zoom, map]);
+
+  return null;
 }
 
 function MapEvents({ onMapClick, onCenterChange, reportMode }) {
@@ -65,7 +92,10 @@ export default function FloodMap({
   showRain,
   rainPoints,
   reports,
+  historicalReports,
   reportMode,
+  userLocation,
+  focusTarget,
   onMapClick,
   onCenterChange,
 }) {
@@ -86,6 +116,19 @@ export default function FloodMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {showRisk && <GeoJSON data={encharcamientos} style={riskStyle} />}
+      {showRisk &&
+        clusterReports(historicalReports).map((c, i) => (
+          <CircleMarker
+            key={i}
+            center={[c.lat, c.lng]}
+            radius={8 + Math.min(c.count, 10) * 2}
+            pathOptions={{ color: "#72243e", fillColor: "#d4537e", fillOpacity: 0.55, weight: 1 }}
+          >
+            <Tooltip direction="top">
+              {c.count} reporte{c.count > 1 ? "s" : ""} de inundacion aqui
+            </Tooltip>
+          </CircleMarker>
+        ))}
       {showRain &&
         rainPoints.map((p) => (
           <CircleMarker
@@ -110,6 +153,17 @@ export default function FloodMap({
             <Tooltip direction="top">{reportAge(r.createdAt)}</Tooltip>
           </Marker>
         ))}
+      {userLocation && (
+        <CircleMarker
+          center={[userLocation.lat, userLocation.lng]}
+          radius={8}
+          pathOptions={{ color: "#185fa5", fillColor: "#378add", fillOpacity: 0.9, weight: 2 }}
+        >
+          <Tooltip direction="top">Tu ubicacion</Tooltip>
+        </CircleMarker>
+      )}
+      {userLocation && <FlyTo target={userLocation} zoom={14} />}
+      {focusTarget && <FlyTo target={focusTarget} zoom={16} />}
       <MapEvents
         onMapClick={onMapClick}
         onCenterChange={onCenterChange}

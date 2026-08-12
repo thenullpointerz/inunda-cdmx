@@ -58,6 +58,24 @@
   min-height: 0;
 }
 
+.locate-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
 .report-hint {
   position: absolute;
   top: 10px;
@@ -88,7 +106,7 @@
 .overlay-row {
   display: flex;
   gap: 12px;
-  align-items: stretch;
+  align-items: flex-start;
   max-width: 640px;
   width: 100%;
   margin: 0 auto;
@@ -138,18 +156,75 @@
   flex: 1;
   background: var(--surface-2);
   border-radius: 8px;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.rain-card-header {
+  width: 100%;
+  background: none;
+  border: none;
   padding: 10px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  pointer-events: auto;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+.rain-card-header:disabled {
+  cursor: default;
 }
 
 .rain-card-left {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.nearby-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 12px 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+}
+
+.nearby-list li {
+  padding: 0;
+}
+
+.nearby-item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 6px 4px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.nearby-item:hover {
+  background: var(--surface-1);
+}
+
+.nearby-wet {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.nearby-dry {
+  color: var(--text-muted);
 }
 
 .rain-title {
@@ -166,7 +241,7 @@
 
 .report-btn {
   flex-shrink: 0;
-  height: auto;
+  height: 40px;
   padding: 0 18px;
   border-radius: 8px;
   border: none;
