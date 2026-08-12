@@ -1,0 +1,204 @@
+.app {
+  width: 100%;
+  height: 100svh;
+  background: var(--surface-1);
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.brand-icon {
+  color: var(--accent);
+}
+
+.muted-icon {
+  color: var(--text-secondary);
+}
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 10px 16px 0;
+}
+
+.tab {
+  font-size: 12px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.tab-active {
+  background: var(--accent-bg);
+  color: var(--accent);
+  border-color: transparent;
+}
+
+.map-wrap {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+}
+
+.report-hint {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  z-index: 1000;
+}
+
+.overlay-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.18), transparent);
+}
+
+.overlay-row {
+  display: flex;
+  gap: 12px;
+  align-items: stretch;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 6px 14px;
+  align-self: flex-start;
+  pointer-events: auto;
+}
+
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 4px;
+}
+
+.dot-red {
+  background: var(--danger);
+}
+
+.dot-amber {
+  background: var(--warning);
+}
+
+.dot-green {
+  background: var(--success);
+}
+
+.rain-card {
+  flex: 1;
+  background: var(--surface-2);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.rain-card-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.rain-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rain-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.report-btn {
+  flex-shrink: 0;
+  height: auto;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+.report-btn-active {
+  background: var(--danger);
+}
+
+.rain-label {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 1px 6px;
+  border: none;
+  box-shadow: none;
+  background: rgba(255, 255, 255, 0.9);
+  color: #1c1b17;
+}
+
+.rain-label::before {
+  display: none;
+}
+
+.report-pin-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid #fff;
+  box-shadow: 0 0 0 1px var(--accent);
+}
