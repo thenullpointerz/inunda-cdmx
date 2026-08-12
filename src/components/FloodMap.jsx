@@ -99,15 +99,9 @@ export default function FloodMap({
               weight: 1,
             }}
           >
-            {p.mm > 0 ? (
-              <Tooltip direction="top" permanent className="rain-label">
-                {p.name}: {rainLevelFor(p.mm).label} ({p.mm} mm)
-              </Tooltip>
-            ) : (
-              <Tooltip direction="top">
-                {p.name}: sin lluvia
-              </Tooltip>
-            )}
+            <Tooltip direction="top">
+              {p.name}: {p.mm > 0 ? `${rainLevelFor(p.mm).label} (${p.mm} mm)` : "sin lluvia"}
+            </Tooltip>
           </CircleMarker>
         ))}
       {showReports &&

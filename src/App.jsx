@@ -29,6 +29,7 @@ function App() {
   const { reports, addReport } = useReports();
 
   const closest = useMemo(() => nearestStation(rainPoints, center), [rainPoints, center]);
+  const wetCount = useMemo(() => rainPoints.filter((s) => s.mm > 0).length, [rainPoints]);
 
   function handleMapClick(lat, lng) {
     addReport(lat, lng);
@@ -81,6 +82,9 @@ function App() {
           )}
           {activeTab === "rain" && (
             <div className="legend">
+              <span className="legend-count">
+                {wetCount} de {rainPoints.length} estaciones con lluvia
+              </span>
               {RAIN_LEVELS.filter((level) => level.label !== "Sin lluvia").map((level) => (
                 <span key={level.label}>
                   <i className="dot" style={{ background: level.color }} /> {level.label}
