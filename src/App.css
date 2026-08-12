@@ -87,6 +87,14 @@
   padding: 6px 12px;
   font-size: 12px;
   z-index: 1000;
+  max-width: 85%;
+  text-align: center;
+}
+
+.report-hint-warning {
+  background: #fdf0e6;
+  border-color: #e8590c;
+  color: #7a3406;
 }
 
 .overlay-bottom {

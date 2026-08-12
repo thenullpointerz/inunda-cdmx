@@ -27,6 +27,7 @@ function App() {
   const [center, setCenter] = useState({ lat: 19.4326, lng: -99.1332 });
   const [userLocation, setUserLocation] = useState(null);
   const [focusTarget, setFocusTarget] = useState(null);
+  const [reportFeedback, setReportFeedback] = useState(null);
   const rainPoints = useRainGrid();
   const { reports, allReports, addReport } = useReports();
 
@@ -57,9 +58,19 @@ function App() {
   const closest = nearby[0] ?? null;
   const wetCount = useMemo(() => rainPoints.filter((s) => s.mm > 0).length, [rainPoints]);
 
-  function handleMapClick(lat, lng) {
-    addReport(lat, lng);
+  async function handleMapClick(lat, lng) {
+    const result = await addReport(lat, lng);
     setReportMode(false);
+
+    if (!result.ok) {
+      const messages = {
+        out_of_bounds: "Ese punto esta fuera de CDMX, no se guardo.",
+        cooldown: `Ya reportaste hace poco. Puedes reportar de nuevo en ${result.remainingMinutes} min.`,
+        error: "No se pudo guardar el reporte, intenta de nuevo.",
+      };
+      setReportFeedback(messages[result.reason] ?? "No se pudo guardar el reporte.");
+      setTimeout(() => setReportFeedback(null), 4000);
+    }
   }
 
   function toggleLayer(id) {
@@ -114,6 +125,7 @@ function App() {
         {reportMode && (
           <div className="report-hint">Toca el mapa para marcar la inundacion</div>
         )}
+        {reportFeedback && <div className="report-hint report-hint-warning">{reportFeedback}</div>}
 
         <button
           type="button"
