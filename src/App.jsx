@@ -119,6 +119,7 @@ function App() {
           reportMode={reportMode}
           userLocation={userLocation}
           focusTarget={focusTarget}
+          onStationClick={focusStation}
           onMapClick={handleMapClick}
           onCenterChange={(lat, lng) => setCenter({ lat, lng })}
         />

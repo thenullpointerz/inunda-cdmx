@@ -96,6 +96,7 @@ export default function FloodMap({
   reportMode,
   userLocation,
   focusTarget,
+  onStationClick,
   onMapClick,
   onCenterChange,
 }) {
@@ -141,6 +142,7 @@ export default function FloodMap({
               fillOpacity: rainStyle(p.mm).fillOpacity,
               weight: 1,
             }}
+            eventHandlers={{ click: () => onStationClick(p) }}
           >
             <Tooltip direction="top">
               {p.name}: {p.mm > 0 ? `${rainLevelFor(p.mm).label} (${p.mm} mm)` : "sin lluvia"}
