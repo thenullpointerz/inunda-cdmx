@@ -125,7 +125,7 @@ export default function FloodMap({
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {showRisk && <GeoJSON data={encharcamientos} style={riskStyle} />}
       {showRisk &&

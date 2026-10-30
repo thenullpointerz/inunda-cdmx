@@ -16,6 +16,7 @@ import boroughs from "./data/boroughs.json";
 import { useRainGrid } from "./hooks/useRainGrid";
 import { useReports } from "./hooks/useReports";
 import { RAIN_LEVELS, rainLevelFor } from "./lib/rainScale";
+import { DISCLAIMER, FLOOD_ZONES_URL, CC_BY_URL, OPEN_METEO_URL, SOURCES } from "./lib/credits";
 import "./App.css";
 
 const LAYERS = [
@@ -201,6 +202,11 @@ function App() {
             <div className="legend">
               <span><i className="dot dot-red" /> Zona con historial de encharcamiento (IPDP)</span>
               <span><i className="dot" style={{ background: "#d4537e" }} /> Reportado por usuarios</span>
+              <span className="legend-note">
+                Fuente: <a href={FLOOD_ZONES_URL} target="_blank" rel="noreferrer">IPDP, Gobierno de la CDMX</a>{" "}
+                (<a href={CC_BY_URL} target="_blank" rel="noreferrer">CC BY 4.0</a>), datos procesados por
+                InundaCDMX. <button type="button" className="link-btn" onClick={() => setAboutOpen(true)}>Aviso y fuentes</button>
+              </span>
             </div>
           )}
           {activeLayers.rain && (
@@ -220,7 +226,12 @@ function App() {
                     </span>
                   ))}
                   {rainSource && (
-                    <span className="legend-note">Estimacion por modelo ({rainSource}), mm/h</span>
+                    <span className="legend-note">
+                      Estimación por modelo, mm/h.{" "}
+                      <a href={OPEN_METEO_URL} target="_blank" rel="noreferrer">Weather data by Open-Meteo.com</a>.
+                      No es una alerta oficial.{" "}
+                      <button type="button" className="link-btn" onClick={() => setAboutOpen(true)}>Aviso y fuentes</button>
+                    </span>
                   )}
                 </>
               )}
@@ -341,6 +352,24 @@ function App() {
               Gestión Integral de Riesgos y Protección Civil de la Ciudad de México.
             </p>
           </details>
+
+          <h3>Aviso importante</h3>
+          <p>{DISCLAIMER}</p>
+
+          <h3>Fuentes y créditos</h3>
+          <ul className="about-sources">
+            {SOURCES.map((source) => (
+              <li key={source.id}>
+                <strong>{source.title}.</strong> {source.description}{" "}
+                {source.links.map((link, i) => (
+                  <span key={link.href}>
+                    {i > 0 && " · "}
+                    <a href={link.href} target="_blank" rel="noreferrer">{link.label}</a>
+                  </span>
+                ))}
+              </li>
+            ))}
+          </ul>
 
           <h3>Inundaciones por alcaldía</h3>
           <ul className="about-links">

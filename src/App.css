@@ -114,6 +114,16 @@
   color: var(--accent);
 }
 
+.about-sources {
+  margin: 0;
+  padding-left: 18px;
+}
+
+.about-sources li {
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
 .about-links {
   margin: 0;
   padding-left: 18px;
@@ -260,6 +270,20 @@
 .legend-note {
   flex-basis: 100%;
   font-size: 11px;
+}
+
+.legend-note a,
+.link-btn {
+  color: var(--accent);
+}
+
+.link-btn {
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 .dot {

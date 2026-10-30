@@ -1,5 +1,6 @@
-// SACMEX's official rain scale thresholds. Applied to the estimated hourly
-// rate (mm/h) from api/pluviometros.js, so it is an approximation of their map.
+// Level names and thresholds based on the scale SACMEX used in its rain-gauge
+// map. Applied to the estimated hourly rate (mm/h) from api/pluviometros.js, so
+// it is an approximation, not an official classification.
 export const RAIN_LEVELS = [
   { max: 0, label: "Sin lluvia", color: "#9b9a92" },
   { max: 3.0, label: "Ligera", color: "#2f9e44" },

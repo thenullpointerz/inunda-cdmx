@@ -7,6 +7,7 @@
 // Runs after `vite build` (see the "build" script in package.json).
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import path from "node:path";
+import { DISCLAIMER, SOURCES, OPEN_METEO_URL } from "../src/lib/credits.js";
 
 const SITE = "https://inunda-cdmx.vercel.app";
 const DIST = "dist";
@@ -58,8 +59,13 @@ table{width:100%;border-collapse:collapse;background:var(--card);border:1px soli
 th,td{text-align:left;padding:8px 12px;border-bottom:1px solid var(--border)}
 th{font-size:13px;color:var(--muted);font-weight:600}
 td.num,th.num{text-align:right}
-footer{padding:0 16px 40px;font-size:13px;color:var(--muted)}
+footer{padding:0 16px 40px;font-size:13px;color:var(--muted)}footer ul{padding-left:18px}footer li{margin-bottom:6px}
 `;
+
+function sourceItem(source) {
+  const links = source.links.map((l) => `<a href="${l.href}" rel="noopener">${esc(l.label)}</a>`).join(" · ");
+  return `<li><strong>${esc(source.title)}.</strong> ${esc(source.description)} ${links}</li>`;
+}
 
 function layout({ title, description, urlPath, body, breadcrumbs }) {
   const url = `${SITE}${urlPath}`;
@@ -99,7 +105,11 @@ function layout({ title, description, urlPath, body, breadcrumbs }) {
 ${body}
 </main>
 <footer class="wrap">
-<p>Datos de zonas con historial de encharcamiento: portal de datos abiertos de la Ciudad de México. Límites de alcaldías: GeoServer abierto de SACMEX. Las cifras son aproximadas y se calculan a partir de los polígonos publicados; no sustituyen los avisos oficiales.</p>
+<p><strong>Aviso.</strong> ${esc(DISCLAIMER)}</p>
+<p><strong>Fuentes y créditos.</strong> Las cifras de esta página son cálculos aproximados de InundaCDMX a partir de los polígonos publicados; no son cifras oficiales.</p>
+<ul>
+${SOURCES.map(sourceItem).join("")}
+</ul>
 </footer>
 </body>
 </html>
@@ -137,7 +147,7 @@ function boroughPage(b) {
 <p>Es un registro histórico: indica dónde se han presentado encharcamientos, no predice dónde ocurrirán hoy. Para ver las zonas sobre el mapa, activa la capa «Riesgo historico» en InundaCDMX.</p>
 
 <h2>Lluvia en ${esc(b.name)} ahora</h2>
-<p>El mapa muestra una estimación de lluvia por alcaldía en milímetros por hora, calculada con un modelo meteorológico (Open-Meteo) y actualizada cada pocos minutos. Son estimaciones, no lecturas de pluviómetros oficiales. <a href="${mapUrl(b)}">Abre el mapa centrado en ${esc(b.name)}</a> para ver el nivel de lluvia actual.</p>
+<p>El mapa muestra una estimación de lluvia por alcaldía en milímetros por hora, calculada con un modelo meteorológico (<a href="${OPEN_METEO_URL}" rel="noopener">Weather data by Open-Meteo.com</a>) y actualizada cada pocos minutos. Son estimaciones, no lecturas de pluviómetros oficiales. <a href="${mapUrl(b)}">Abre el mapa centrado en ${esc(b.name)}</a> para ver el nivel de lluvia actual.</p>
 
 <h2>Si hay una inundación</h2>
 <p>Si hay riesgo inmediato, llama al 911. Para avisos oficiales, consulta a la Secretaría de Gestión Integral de Riesgos y Protección Civil de la Ciudad de México. En InundaCDMX puedes marcar en el mapa un punto inundado para avisar a otras personas; los reportes se borran automáticamente a las 4 horas.</p>
