@@ -129,26 +129,44 @@
   color: var(--text-secondary);
 }
 
-.tabs {
+.layers {
   display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 6px;
   padding: 10px 16px 0;
 }
 
-.tab {
+.layers-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-right: 2px;
+}
+
+/* Each layer is a show/hide switch: a checked box means visible, an empty
+   box with a dashed border means hidden. */
+.layer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 12px;
   padding: 6px 12px;
   border-radius: 8px;
-  border: 1px solid var(--border-strong);
+  border: 1px dashed var(--border-strong);
   background: transparent;
-  color: var(--text-secondary);
+  color: var(--text-muted);
   cursor: pointer;
 }
 
-.tab-active {
+.layer:hover {
+  color: var(--text-secondary);
+}
+
+.layer-on {
   background: var(--accent-bg);
   color: var(--accent);
-  border-color: transparent;
+  border: 1px solid var(--accent);
+  font-weight: 500;
 }
 
 .map-wrap {

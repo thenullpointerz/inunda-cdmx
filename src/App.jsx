@@ -1,5 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Droplet, Info, X, CloudRain, MapPinPlus, ChevronDown, ChevronUp, LocateFixed } from "lucide-react";
+import {
+  Droplet,
+  Info,
+  X,
+  CloudRain,
+  MapPinPlus,
+  ChevronDown,
+  ChevronUp,
+  LocateFixed,
+  Square,
+  SquareCheck,
+} from "lucide-react";
 import FloodMap from "./components/FloodMap";
 import boroughs from "./data/boroughs.json";
 import { useRainGrid } from "./hooks/useRainGrid";
@@ -134,18 +145,26 @@ function App() {
         </button>
       </header>
 
-      <nav className="tabs">
-        {LAYERS.map((layer) => (
-          <button
-            key={layer.id}
-            className={`tab ${activeLayers[layer.id] ? "tab-active" : ""}`}
-            onClick={() => toggleLayer(layer.id)}
-            type="button"
-          >
-            {layer.label}
-          </button>
-        ))}
-      </nav>
+      <div className="layers" role="group" aria-label="Capas del mapa">
+        <span className="layers-label">Capas del mapa</span>
+        {LAYERS.map((layer) => {
+          const on = activeLayers[layer.id];
+          const Icon = on ? SquareCheck : Square;
+          return (
+            <button
+              key={layer.id}
+              className={`layer ${on ? "layer-on" : ""}`}
+              onClick={() => toggleLayer(layer.id)}
+              type="button"
+              aria-pressed={on}
+              title={on ? `Ocultar ${layer.label.toLowerCase()}` : `Mostrar ${layer.label.toLowerCase()}`}
+            >
+              <Icon size={14} aria-hidden="true" />
+              {layer.label}
+            </button>
+          );
+        })}
+      </div>
 
       <div className="map-wrap">
         <FloodMap
