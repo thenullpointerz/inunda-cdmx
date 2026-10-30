@@ -1,25 +1,87 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-MX">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>InundaCDMX - Mapa de inundaciones y lluvia en vivo en Ciudad de Mexico</title>
+    <title>Inundaciones en Ciudad de México: mapa en vivo | InundaCDMX</title>
     <meta
       name="description"
-      content="Mapa en vivo de inundaciones en la Ciudad de Mexico: lluvia en tiempo real por alcaldia, zonas historicas de riesgo y reportes ciudadanos de encharcamientos."
+      content="Mapa de inundaciones en la Ciudad de México: lluvia estimada por alcaldía, zonas con historial de encharcamiento y reportes ciudadanos. Consulta tu zona."
     />
     <link rel="canonical" href="https://inunda-cdmx.vercel.app/" />
-    <meta property="og:title" content="InundaCDMX" />
-    <meta
-      property="og:description"
-      content="Mapa en vivo de inundaciones y lluvia en tiempo real en la Ciudad de Mexico."
-    />
+
+    <meta property="og:site_name" content="InundaCDMX" />
+    <meta property="og:locale" content="es_MX" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://inunda-cdmx.vercel.app/" />
+    <meta property="og:title" content="Inundaciones en Ciudad de México: mapa en vivo" />
+    <meta
+      property="og:description"
+      content="Lluvia estimada por alcaldía, zonas con historial de encharcamiento y reportes ciudadanos en un solo mapa."
+    />
+    <meta property="og:image" content="https://inunda-cdmx.vercel.app/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="InundaCDMX: mapa de inundaciones y lluvia en vivo en la Ciudad de México" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Inundaciones en Ciudad de México: mapa en vivo" />
+    <meta
+      name="twitter:description"
+      content="Lluvia estimada por alcaldía, zonas con historial de encharcamiento y reportes ciudadanos."
+    />
+    <meta name="twitter:image" content="https://inunda-cdmx.vercel.app/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "InundaCDMX",
+        "url": "https://inunda-cdmx.vercel.app/",
+        "description": "Mapa de inundaciones en la Ciudad de México con lluvia estimada por alcaldía, zonas con historial de encharcamiento y reportes ciudadanos.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Web",
+        "inLanguage": "es-MX",
+        "areaServed": { "@type": "City", "name": "Ciudad de México" },
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "MXN" }
+      }
+    </script>
+
+    <style>
+      .splash {
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 12px;
+        max-width: 640px;
+        margin: 0 auto;
+        padding: 24px 16px;
+        color: #f0efe9;
+        background: #16171a;
+      }
+      .splash h1 { margin: 0; font-size: 22px; line-height: 1.3; }
+      .splash p { margin: 0; color: #a9a89f; }
+      @media (prefers-color-scheme: light) {
+        .splash { color: #1c1b17; background: #f4f3ee; }
+        .splash p { color: #6b6a63; }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <main class="splash">
+        <h1>InundaCDMX: mapa de inundaciones y lluvia en vivo en la Ciudad de México</h1>
+        <p>
+          Consulta la lluvia estimada por alcaldía, las zonas con historial de encharcamiento y los
+          reportes ciudadanos de inundación. Cargando el mapa...
+        </p>
+        <noscript>
+          <p>Este mapa necesita JavaScript. Mientras tanto, consulta la lista de
+            <a href="/inundaciones/">inundaciones por alcaldía</a>.</p>
+        </noscript>
+      </main>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

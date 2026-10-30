@@ -73,6 +73,16 @@ function FlyTo({ target, zoom = 15 }) {
   return null;
 }
 
+function FitBounds({ bounds }) {
+  const map = useMap();
+
+  useEffect(() => {
+    map.fitBounds(bounds, { padding: [20, 20] });
+  }, [bounds, map]);
+
+  return null;
+}
+
 function MapEvents({ onMapClick, onCenterChange, reportMode }) {
   const map = useMapEvents({
     click(e) {
@@ -96,6 +106,7 @@ export default function FloodMap({
   reportMode,
   userLocation,
   focusTarget,
+  focusBounds,
   onStationClick,
   onMapClick,
   onCenterChange,
@@ -164,6 +175,7 @@ export default function FloodMap({
           <Tooltip direction="top">Tu ubicacion</Tooltip>
         </CircleMarker>
       )}
+      {focusBounds && <FitBounds bounds={focusBounds} />}
       {userLocation && <FlyTo target={userLocation} zoom={14} />}
       {focusTarget && <FlyTo target={focusTarget} zoom={16} />}
       <MapEvents

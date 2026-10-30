@@ -12,6 +12,15 @@ A live flood-risk map for Mexico City: historical flood-prone zones, real-time r
 
 React + Vite, [react-leaflet](https://react-leaflet.js.org/) for the map, plain CSS. Deployed on Vercel as a static site with a small serverless function. Visits are measured with [Vercel Web Analytics](https://vercel.com/docs/analytics) (cookie-free); enable it in the project's Analytics tab.
 
+## SEO pages
+
+The map is a client-rendered app, so search engines get real text from static pages generated at build time:
+
+- `/inundaciones/` and `/inundaciones/<borough>/` — one page per borough with zone counts and coverage computed from the flood dataset, plus links back to the map (`/?alcaldia=<slug>` centers the map on that borough).
+- `sitemap.xml` — generated with every public URL.
+
+`npm run build` runs `vite build` and then `scripts/generate-pages.mjs`, which reads `src/data/boroughs.json`.
+
 ## Development
 
 ```bash
@@ -19,8 +28,16 @@ npm install
 npm run dev
 ```
 
-To refresh the historical risk dataset:
+The dev server does not serve the static SEO pages. To see them, build and preview:
+
+```bash
+npm run build
+npm run preview
+```
+
+To refresh the historical risk dataset and the per-borough summary (borough boundaries come from SACMEX's open GeoServer):
 
 ```bash
 node scripts/convert-shapefile.mjs
+node scripts/build-borough-data.mjs
 ```
