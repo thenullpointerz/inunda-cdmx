@@ -1,0 +1,338 @@
+[
+  {
+    "slug": "alvaro-obregon",
+    "name": "Álvaro Obregón",
+    "lat": 19.3182,
+    "lng": -99.2481,
+    "bounds": [
+      [
+        19.2326,
+        -99.3244
+      ],
+      [
+        19.4037,
+        -99.1717
+      ]
+    ],
+    "areaKm2": 95.7,
+    "floodZones": 27,
+    "floodAreaKm2": 7.58,
+    "floodSharePct": 7.9,
+    "rankByZones": 4
+  },
+  {
+    "slug": "azcapotzalco",
+    "name": "Azcapotzalco",
+    "lat": 19.4858,
+    "lng": -99.1821,
+    "bounds": [
+      [
+        19.4564,
+        -99.2211
+      ],
+      [
+        19.5151,
+        -99.1431
+      ]
+    ],
+    "areaKm2": 33.5,
+    "floodZones": 15,
+    "floodAreaKm2": 5.16,
+    "floodSharePct": 15.4,
+    "rankByZones": 12
+  },
+  {
+    "slug": "benito-juarez",
+    "name": "Benito Juárez",
+    "lat": 19.3805,
+    "lng": -99.1615,
+    "bounds": [
+      [
+        19.3569,
+        -99.1921
+      ],
+      [
+        19.4041,
+        -99.1309
+      ]
+    ],
+    "areaKm2": 26.7,
+    "floodZones": 17,
+    "floodAreaKm2": 6.33,
+    "floodSharePct": 23.8,
+    "rankByZones": 11
+  },
+  {
+    "slug": "coyoacan",
+    "name": "Coyoacán",
+    "lat": 19.3282,
+    "lng": -99.1524,
+    "bounds": [
+      [
+        19.2968,
+        -99.2058
+      ],
+      [
+        19.3596,
+        -99.0991
+      ]
+    ],
+    "areaKm2": 53.8,
+    "floodZones": 28,
+    "floodAreaKm2": 8.28,
+    "floodSharePct": 15.4,
+    "rankByZones": 3
+  },
+  {
+    "slug": "cuajimalpa-de-morelos",
+    "name": "Cuajimalpa de Morelos",
+    "lat": 19.3187,
+    "lng": -99.3058,
+    "bounds": [
+      [
+        19.2326,
+        -99.3649
+      ],
+      [
+        19.4048,
+        -99.2467
+      ]
+    ],
+    "areaKm2": 71,
+    "floodZones": 13,
+    "floodAreaKm2": 3.11,
+    "floodSharePct": 4.4,
+    "rankByZones": 13
+  },
+  {
+    "slug": "cuauhtemoc",
+    "name": "Cuauhtémoc",
+    "lat": 19.4328,
+    "lng": -99.1532,
+    "bounds": [
+      [
+        19.3998,
+        -99.1843
+      ],
+      [
+        19.4658,
+        -99.1222
+      ]
+    ],
+    "areaKm2": 32.5,
+    "floodZones": 22,
+    "floodAreaKm2": 6.93,
+    "floodSharePct": 21.3,
+    "rankByZones": 7
+  },
+  {
+    "slug": "gustavo-a-madero",
+    "name": "Gustavo A. Madero",
+    "lat": 19.5188,
+    "lng": -99.1139,
+    "bounds": [
+      [
+        19.4448,
+        -99.177
+      ],
+      [
+        19.5928,
+        -99.0509
+      ]
+    ],
+    "areaKm2": 87.8,
+    "floodZones": 50,
+    "floodAreaKm2": 13.36,
+    "floodSharePct": 15.2,
+    "rankByZones": 1
+  },
+  {
+    "slug": "iztacalco",
+    "name": "Iztacalco",
+    "lat": 19.399,
+    "lng": -99.0965,
+    "bounds": [
+      [
+        19.3757,
+        -99.1372
+      ],
+      [
+        19.4222,
+        -99.0558
+      ]
+    ],
+    "areaKm2": 23.1,
+    "floodZones": 9,
+    "floodAreaKm2": 2.64,
+    "floodSharePct": 11.5,
+    "rankByZones": 14
+  },
+  {
+    "slug": "iztapalapa",
+    "name": "Iztapalapa",
+    "lat": 19.3429,
+    "lng": -99.0501,
+    "bounds": [
+      [
+        19.285,
+        -99.1399
+      ],
+      [
+        19.4007,
+        -98.9604
+      ]
+    ],
+    "areaKm2": 113,
+    "floodZones": 47,
+    "floodAreaKm2": 15.87,
+    "floodSharePct": 14,
+    "rankByZones": 2
+  },
+  {
+    "slug": "la-magdalena-contreras",
+    "name": "La Magdalena Contreras",
+    "lat": 19.2755,
+    "lng": -99.265,
+    "bounds": [
+      [
+        19.2131,
+        -99.3233
+      ],
+      [
+        19.3379,
+        -99.2067
+      ]
+    ],
+    "areaKm2": 63.3,
+    "floodZones": 2,
+    "floodAreaKm2": 0.7,
+    "floodSharePct": 1.1,
+    "rankByZones": 15
+  },
+  {
+    "slug": "miguel-hidalgo",
+    "name": "Miguel Hidalgo",
+    "lat": 19.4297,
+    "lng": -99.2117,
+    "bounds": [
+      [
+        19.386,
+        -99.2597
+      ],
+      [
+        19.4734,
+        -99.1637
+      ]
+    ],
+    "areaKm2": 46.4,
+    "floodZones": 23,
+    "floodAreaKm2": 8.46,
+    "floodSharePct": 18.2,
+    "rankByZones": 6
+  },
+  {
+    "slug": "milpa-alta",
+    "name": "Milpa Alta",
+    "lat": 19.138,
+    "lng": -99.0578,
+    "bounds": [
+      [
+        19.0482,
+        -99.1633
+      ],
+      [
+        19.2277,
+        -98.9524
+      ]
+    ],
+    "areaKm2": 297.3,
+    "floodZones": 1,
+    "floodAreaKm2": 0.18,
+    "floodSharePct": 0.1,
+    "rankByZones": 16
+  },
+  {
+    "slug": "tlahuac",
+    "name": "Tláhuac",
+    "lat": 19.2689,
+    "lng": -99.0046,
+    "bounds": [
+      [
+        19.2106,
+        -99.069
+      ],
+      [
+        19.3271,
+        -98.9403
+      ]
+    ],
+    "areaKm2": 85.6,
+    "floodZones": 18,
+    "floodAreaKm2": 6.51,
+    "floodSharePct": 7.6,
+    "rankByZones": 10
+  },
+  {
+    "slug": "tlalpan",
+    "name": "Tlalpan",
+    "lat": 19.2009,
+    "lng": -99.2085,
+    "bounds": [
+      [
+        19.0894,
+        -99.3162
+      ],
+      [
+        19.3123,
+        -99.1009
+      ]
+    ],
+    "areaKm2": 313.6,
+    "floodZones": 26,
+    "floodAreaKm2": 6.98,
+    "floodSharePct": 2.2,
+    "rankByZones": 5
+  },
+  {
+    "slug": "venustiano-carranza",
+    "name": "Venustiano Carranza",
+    "lat": 19.4321,
+    "lng": -99.0873,
+    "bounds": [
+      [
+        19.4043,
+        -99.1282
+      ],
+      [
+        19.4598,
+        -99.0465
+      ]
+    ],
+    "areaKm2": 33.8,
+    "floodZones": 22,
+    "floodAreaKm2": 8.05,
+    "floodSharePct": 23.8,
+    "rankByZones": 8
+  },
+  {
+    "slug": "xochimilco",
+    "name": "Xochimilco",
+    "lat": 19.2364,
+    "lng": -99.0807,
+    "bounds": [
+      [
+        19.1525,
+        -99.1544
+      ],
+      [
+        19.3204,
+        -99.007
+      ]
+    ],
+    "areaKm2": 113.9,
+    "floodZones": 20,
+    "floodAreaKm2": 6.66,
+    "floodSharePct": 5.9,
+    "rankByZones": 9
+  }
+]
