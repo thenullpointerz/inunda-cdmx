@@ -145,7 +145,7 @@ export default function FloodMap({
             eventHandlers={{ click: () => onStationClick(p) }}
           >
             <Tooltip direction="top">
-              {p.name}: {p.mm > 0 ? `${rainLevelFor(p.mm).label} (${p.mm} mm)` : "sin lluvia"}
+              {p.name}: {p.mm > 0 ? `${rainLevelFor(p.mm).label} (${p.mm} mm/h)` : "sin lluvia"}
             </Tooltip>
           </CircleMarker>
         ))}

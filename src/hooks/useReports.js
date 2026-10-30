@@ -43,6 +43,7 @@ function addUnique(prev, row) {
 
 export function useReports() {
   const [allReports, setAllReports] = useState(supabase ? [] : loadLocalReports);
+  const [backendDown, setBackendDown] = useState(false);
   const [, forceTick] = useState(0);
 
   useEffect(() => {
@@ -53,13 +54,7 @@ export function useReports() {
   useEffect(() => {
     if (!supabase) return;
 
-    supabase
-      .from("reports")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .then(({ data, error }) => {
-        if (!error && data) setAllReports(data.map(mapRow));
-      });
+    let cancelled = false;
 
     const channel = supabase
       .channel("reports-inserts")
@@ -70,7 +65,23 @@ export function useReports() {
       )
       .subscribe();
 
+    supabase
+      .from("reports")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error || !data) {
+          // Project paused or unreachable: stop the realtime retry loop too.
+          setBackendDown(true);
+          supabase.removeChannel(channel);
+          return;
+        }
+        setAllReports(data.map(mapRow));
+      });
+
     return () => {
+      cancelled = true;
       supabase.removeChannel(channel);
     };
   }, []);
@@ -90,6 +101,7 @@ export function useReports() {
     }
 
     if (supabase) {
+      if (backendDown) return { ok: false, reason: "unavailable" };
       const { data, error } = await supabase.from("reports").insert({ lat, lng }).select().single();
       if (error || !data) return { ok: false, reason: "error" };
       setAllReports((prev) => addUnique(prev, mapRow(data)));
@@ -103,5 +115,5 @@ export function useReports() {
 
   const reports = allReports.filter((r) => Date.now() - r.createdAt < REPORT_TTL_MS);
 
-  return { reports, allReports, addReport };
+  return { reports, allReports, addReport, available: !backendDown };
 }

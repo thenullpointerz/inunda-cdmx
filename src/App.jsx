@@ -12,12 +12,22 @@ const LAYERS = [
   { id: "reports", label: "Reportes" },
 ];
 
+const EARTH_RADIUS_KM = 6371;
+
+function distanceKm(station, point) {
+  const toRad = (deg) => (deg * Math.PI) / 180;
+  const dLat = toRad(station.lat - point.lat);
+  const dLon = toRad(station.lon - point.lng);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(point.lat)) * Math.cos(toRad(station.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(a));
+}
+
 function sortedByDistance(stations, point) {
-  return [...stations].sort((a, b) => {
-    const da = (a.lat - point.lat) ** 2 + (a.lon - point.lng) ** 2;
-    const db = (b.lat - point.lat) ** 2 + (b.lon - point.lng) ** 2;
-    return da - db;
-  });
+  return stations
+    .map((s) => ({ ...s, distanceKm: distanceKm(s, point) }))
+    .sort((a, b) => a.distanceKm - b.distanceKm);
 }
 
 function App() {
@@ -28,8 +38,8 @@ function App() {
   const [userLocation, setUserLocation] = useState(null);
   const [focusTarget, setFocusTarget] = useState(null);
   const [reportFeedback, setReportFeedback] = useState(null);
-  const rainPoints = useRainGrid();
-  const { reports, allReports, addReport } = useReports();
+  const { stations: rainPoints, status: rainStatus, source: rainSource } = useRainGrid();
+  const { reports, allReports, addReport, available: reportsAvailable } = useReports();
 
   function locateMe() {
     if (!navigator.geolocation) return;
@@ -54,7 +64,10 @@ function App() {
     setNearbyOpen(false);
   }
 
-  const nearby = useMemo(() => sortedByDistance(rainPoints, center), [rainPoints, center]);
+  // Rank by the user's own location when known; otherwise by the map center,
+  // and say so in the card title so the list never changes silently.
+  const reference = userLocation ?? center;
+  const nearby = useMemo(() => sortedByDistance(rainPoints, reference), [rainPoints, reference]);
   const closest = nearby[0] ?? null;
   const wetCount = useMemo(() => rainPoints.filter((s) => s.mm > 0).length, [rainPoints]);
 
@@ -67,6 +80,7 @@ function App() {
         out_of_bounds: "Ese punto esta fuera de CDMX, no se guardo.",
         cooldown: `Ya reportaste hace poco. Puedes reportar de nuevo en ${result.remainingMinutes} min.`,
         error: "No se pudo guardar el reporte, intenta de nuevo.",
+        unavailable: "Los reportes no estan disponibles por ahora.",
       };
       setReportFeedback(messages[result.reason] ?? "No se pudo guardar el reporte.");
       setTimeout(() => setReportFeedback(null), 4000);
@@ -146,14 +160,25 @@ function App() {
           )}
           {activeLayers.rain && (
             <div className="legend">
-              <span className="legend-count">
-                {wetCount} de {rainPoints.length} estaciones con lluvia
-              </span>
-              {RAIN_LEVELS.filter((level) => level.label !== "Sin lluvia").map((level) => (
-                <span key={level.label}>
-                  <i className="dot" style={{ background: level.color }} /> {level.label}
-                </span>
-              ))}
+              {rainStatus === "error" ? (
+                <span className="legend-count">Datos de lluvia no disponibles por ahora</span>
+              ) : (
+                <>
+                  <span className="legend-count">
+                    {rainStatus === "loading"
+                      ? "Consultando lluvia..."
+                      : `${wetCount} de ${rainPoints.length} alcaldias con lluvia`}
+                  </span>
+                  {RAIN_LEVELS.filter((level) => level.label !== "Sin lluvia").map((level) => (
+                    <span key={level.label}>
+                      <i className="dot" style={{ background: level.color }} /> {level.label}
+                    </span>
+                  ))}
+                  {rainSource && (
+                    <span className="legend-note">Estimacion por modelo ({rainSource}), mm/h</span>
+                  )}
+                </>
+              )}
             </div>
           )}
 
@@ -168,11 +193,14 @@ function App() {
                 <div className="rain-card-left">
                   <CloudRain size={18} className="brand-icon" aria-hidden="true" />
                   <div>
-                    <p className="rain-title">Lluvia en tu zona</p>
+                    <p className="rain-title">
+                      {userLocation ? "Lluvia en tu zona" : "Lluvia en esta zona del mapa"}
+                    </p>
                     <p className="rain-subtitle">
-                      {!closest && "Consultando..."}
+                      {!closest && rainStatus === "loading" && "Consultando..."}
+                      {!closest && rainStatus === "error" && "Datos no disponibles por ahora"}
                       {closest &&
-                        `${closest.name}: ${rainLevelFor(closest.mm).label}, ${closest.mm} mm`}
+                        `${closest.name}: ${rainLevelFor(closest.mm).label}, ${closest.mm} mm/h`}
                     </p>
                   </div>
                 </div>
@@ -188,9 +216,11 @@ function App() {
                   {nearby.slice(0, 5).map((s) => (
                     <li key={s.id}>
                       <button type="button" className="nearby-item" onClick={() => focusStation(s)}>
-                        <span>{s.name}</span>
+                        <span>
+                          {s.name} <span className="nearby-distance">a {s.distanceKm.toFixed(1)} km</span>
+                        </span>
                         <span className={s.mm > 0 ? "nearby-wet" : "nearby-dry"}>
-                          {s.mm > 0 ? `${rainLevelFor(s.mm).label} (${s.mm} mm)` : "Sin lluvia"}
+                          {s.mm > 0 ? `${rainLevelFor(s.mm).label} (${s.mm} mm/h)` : "Sin lluvia"}
                         </span>
                       </button>
                     </li>
@@ -203,9 +233,14 @@ function App() {
               type="button"
               className={`report-btn ${reportMode ? "report-btn-active" : ""}`}
               onClick={toggleReportMode}
+              disabled={!reportsAvailable}
             >
               <MapPinPlus size={16} aria-hidden="true" />
-              {reportMode ? "Cancelar" : "Reportar inundacion"}
+              {!reportsAvailable
+                ? "Reportes no disponibles"
+                : reportMode
+                  ? "Cancelar"
+                  : "Reportar inundacion"}
             </button>
           </div>
         </div>
