@@ -1,6 +1,8 @@
 # InundaCDMX
 
-A live flood-risk map for Mexico City: historical flood-prone zones, real-time rain readings from SACMEX's official rain gauge network, and crowdsourced flood reports.
+A live flood-risk map for Mexico City: historical flood-prone zones, estimated live rain per borough, and crowdsourced flood reports.
+
+> **Disclaimer.** InundaCDMX is an independent project, not affiliated with or endorsed by the Government of Mexico City, SEGIAGUA (formerly SACMEX) or the IPDP. Rain figures are model estimates, not an official alert. In an emergency call 911. See [DATA_SOURCES.md](DATA_SOURCES.md) for data credits and licences.
 
 ## Data sources
 
